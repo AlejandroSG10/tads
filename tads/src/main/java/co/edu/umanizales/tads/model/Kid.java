@@ -9,4 +9,9 @@ public class Kid {
     private String identification;
     private String name;
     private byte age;
-}
+    private String gender;
+
+    public String getGender(){return gender;}
+    }
+
+

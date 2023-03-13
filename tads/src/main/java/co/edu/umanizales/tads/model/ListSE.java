@@ -1,6 +1,9 @@
 package co.edu.umanizales.tads.model;
 
+import co.edu.umanizales.tads.controller.dto.ResponseDTO;
 import lombok.Data;
+
+import java.util.ArrayList;
 
 @Data
 public class ListSE {
@@ -93,7 +96,6 @@ public class ListSE {
         if (size() >= position) {
 
 
-
             if (position == 0) {
                 addToStart(kid);
             } else {
@@ -130,20 +132,55 @@ public class ListSE {
         Node previousNode = null;
 
 
-        while (temp != null && temp.getData().getIdentification()!=(identification)) {
+        while (temp != null && temp.getData().getIdentification() != (identification)) {
             previousNode = temp;
-            temp= temp.getNext();
+            temp = temp.getNext();
 
         }
-        if (temp != null){
-            if (previousNode== null){
-                head=temp.getNext();
-            }
-            else {
+        if (temp != null) {
+            if (previousNode == null) {
+                head = temp.getNext();
+            } else {
                 previousNode.setNext(temp.getNext());
             }
         }
 
+
+    }
+// Añadir niños al comienzo y niñas al final
+    public void boysFirst(String gender, Kid kid) {
+        Node temp = head;
+        temp = temp.getNext();
+        while(temp != null && temp.getData().getGender() != ("Masculino"))
+            add(kid);
+        if (gender == "Masculino") {
+            addToStart(kid);
+        }
+    }
+    public void rangeByAge(int age, Kid kid){
+        Node temp = head;
+        temp = temp.getNext();
+        //Declaro variables para los rangos
+        int range1to3 = 0;
+        int range4to6 = 0;
+        int range7to9 = 0;
+        int range10to12 = 0;
+        int range13to15 = 0;
+
+        while(kid != null){
+        kid.getAge();
+        }
+        if (age >= 1 && age<= 3){
+            range1to3++;
+        } else if (age >= 4 && age <= 6) {
+            range4to6++;
+        } else if (age >= 7 && age<= 9) {
+            range7to9++;
+        } else if (age >= 10 && age<= 12) {
+            range10to12++;
+        } else if (age >= 13 && age<= 15) {
+            range13to15++;
+        }
 
     }
 }
