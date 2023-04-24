@@ -2,6 +2,9 @@ package co.edu.umanizales.tads.model;
 
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 public class ListSE {
 
@@ -16,7 +19,7 @@ public class ListSE {
         llamo a un ayudante y le digo que se posicione en la cabeza
         mientras en el brazo exista algo
             pasese al siguiente
-        va estar ubicado en el ùltimo
+        va estar ubicado en el último
 
         meto al niño en un costal (nuevo costal)
         y le digo al ultimo que tome el nuevo costal
@@ -135,5 +138,22 @@ public class ListSE {
             }
         }
         return count;
+    }
+    public int getReport(int age) {
+        ListSE listcp = new ListSE();
+        List<Location> list = new ArrayList<>();
+        int generalCount = 0;
+        int masculineCount = 0;
+        int femenineCount = 0;
+        if (this.head != null) {
+            Node temp = this.head;
+            while(temp != null){
+                if (temp.getData().getAge() > age) {
+                    list.add(temp.getData().getLocation());
+                }
+            }
+            generalCount = masculineCount + femenineCount;
+        }
+        return generalCount;
     }
 }
