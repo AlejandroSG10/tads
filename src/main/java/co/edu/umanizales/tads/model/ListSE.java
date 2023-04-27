@@ -1,5 +1,6 @@
 package co.edu.umanizales.tads.model;
 
+import co.edu.umanizales.tads.controller.dto.ReportKidsLocationGenderDTO;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -139,21 +140,18 @@ public class ListSE {
         }
         return count;
     }
-    public int getReport(int age) {
-        ListSE listcp = new ListSE();
-        List<Location> list = new ArrayList<>();
-        int generalCount = 0;
-        int masculineCount = 0;
-        int femenineCount = 0;
-        if (this.head != null) {
+    public void getReportKidsByLocationGendersByAge(byte age, ReportKidsLocationGenderDTO report){
+        if(head !=null){
             Node temp = this.head;
-            while(temp != null){
-                if (temp.getData().getAge() > age) {
-                    list.add(temp.getData().getLocation());
+            while(temp!=null){
+                if(temp.getData().getAge()>age){
+                    report.updateQuantity(
+                            temp.getData().getLocation().getName(),
+                            temp.getData().getGender());
                 }
+                temp = temp.getNext();
             }
-            generalCount = masculineCount + femenineCount;
         }
-        return generalCount;
     }
+
 }

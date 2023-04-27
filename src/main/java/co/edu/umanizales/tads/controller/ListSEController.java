@@ -3,6 +3,7 @@ package co.edu.umanizales.tads.controller;
 
 import co.edu.umanizales.tads.controller.dto.KidDTO;
 import co.edu.umanizales.tads.controller.dto.KidsByLocationDTO;
+import co.edu.umanizales.tads.controller.dto.ReportKidsLocationGenderDTO;
 import co.edu.umanizales.tads.controller.dto.ResponseDTO;
 import co.edu.umanizales.tads.model.Kid;
 import co.edu.umanizales.tads.model.Location;
@@ -99,5 +100,14 @@ public class ListSEController {
         return new ResponseEntity<>(new ResponseDTO(200,kidsByLocationDTOList1,
                 null), HttpStatus.OK);
     }
-
+    @GetMapping(path = "/kidsbylocationgenders/{age}")
+    public ResponseEntity<ResponseDTO> getReportKisLocationGenders(@PathVariable byte age) {
+        ReportKidsLocationGenderDTO report =
+                new ReportKidsLocationGenderDTO(locationService.getLocationsByCodeSize(8));
+        listSEService.getKids()
+                .getReportKidsByLocationGendersByAge(age,report);
+        return new ResponseEntity<>(new ResponseDTO(
+                200,report,
+                null), HttpStatus.OK);
+    }
 }
