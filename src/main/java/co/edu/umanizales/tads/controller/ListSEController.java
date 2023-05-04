@@ -1,15 +1,14 @@
 package co.edu.umanizales.tads.controller;
 
 
-import co.edu.umanizales.tads.controller.dto.KidDTO;
-import co.edu.umanizales.tads.controller.dto.KidsByLocationDTO;
-import co.edu.umanizales.tads.controller.dto.ReportKidsLocationGenderDTO;
-import co.edu.umanizales.tads.controller.dto.ResponseDTO;
+import co.edu.umanizales.tads.controller.dto.*;
 import co.edu.umanizales.tads.exception.ListSEException;
 import co.edu.umanizales.tads.model.Kid;
 import co.edu.umanizales.tads.model.Location;
+import co.edu.umanizales.tads.model.Ranges;
 import co.edu.umanizales.tads.service.ListSEService;
 import co.edu.umanizales.tads.service.LocationService;
+import co.edu.umanizales.tads.service.RangeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +26,7 @@ public class ListSEController {
     private ListSEService listSEService;
     @Autowired
     private LocationService locationService;
+
 
     @GetMapping
     public ResponseEntity<ResponseDTO> getKids(){
@@ -52,29 +52,35 @@ public class ListSEController {
     }
 
 // Este es el controller del tercer metodo
-    @GetMapping(path = "/alternatekids")
-    public ResponseEntity<ResponseDTO> alternateKids() throws ListSEException{
+
+    @GetMapping(path = "/alternate")
+    public ResponseEntity<ResponseDTO> alternateKids() throws ListSEException {
         listSEService.getKids().alternateKids();
-        return new ResponseEntity<>(new ResponseDTO(200, "Se ha intercalado la lista",
+        return new ResponseEntity<>(new ResponseDTO(
+                200, "Se ha alternado la lista con niño y niña",
                 null), HttpStatus.OK);
     }
 
 // Este es el controller del cuarto metodo
-    @GetMapping(path = "/removekidbyage/{age}")
-    public ResponseEntity<ResponseDTO> removeKidByAge(byte age) throws ListSEException{
-        listSEService.getKids().removeKidByAge(age);
-        return new ResponseEntity<>(new ResponseDTO(200, "Se ha intercalado la lista",
-                null), HttpStatus.OK);
-    }
+
+@GetMapping(path = "/deletebyage/{age}")
+public ResponseEntity<ResponseDTO> deleteByAge(@PathVariable byte age) throws ListSEException{
+    listSEService.getKids().deleteByAge(age);
+    return new ResponseEntity<>(new ResponseDTO(200,
+            "Niños por la edad dada eliminados", null), HttpStatus.OK);
+
+}
 
 // Este es el controller del quinto metodo
+@GetMapping(path="/averageage")
+public ResponseEntity<ResponseDTO> averageAge() throws ListSEException{
 
-    @GetMapping(path = "/averageage")
-    public ResponseEntity<ResponseDTO> getAverageAge() throws ListSEException{
-        double kids = listSEService.getKids().getAverageAge();
-        return new ResponseEntity<>(new ResponseDTO(200, "Se ha hecho el promedio de edad",
-                null), HttpStatus.OK);
-    }
+    float averageAge = listSEService.getKids().averageByAge();
+    return new ResponseEntity<>(new ResponseDTO(
+            200,"El promedio de la edad es aproximadamente: " + averageAge,
+            null), HttpStatus.OK);
+}
+
 
 // Este es el controller del sexto metodo
     @GetMapping(path = "/kidsbylocations")
@@ -92,35 +98,62 @@ public class ListSEController {
     }
 
 // Este es el controller del septimo metodo
-    @GetMapping(path = "winpositionkid/{id}/{win}")
-    public ResponseEntity<ResponseDTO> winPositionKid(@PathVariable String id, @PathVariable int win) throws ListSEException{
-        listSEService.getKids().winPositionKid(id, win);
-        return new ResponseEntity<>(new ResponseDTO(200, "El niño avanzó de posiciones", null), HttpStatus.OK);
-    }
+@GetMapping(path = "/winposition/{id}/{numposition}")
+public ResponseEntity<ResponseDTO> winPosition(@PathVariable String id,
+                                               @PathVariable int numposition) throws ListSEException{
 
+    listSEService.getKids().winPosition(id,numposition,listSEService.getKids());
+    return new ResponseEntity<>(new ResponseDTO(
+            200,"El niño se ha movido con éxito",
+            null), HttpStatus.OK);
+}
 // Este es el controller del octavo metodo
+@GetMapping(path = "/loseposition/{id}/{numposition}")
+public ResponseEntity<ResponseDTO> losePosition(@PathVariable String id,
+                                                @PathVariable int numposition) throws ListSEException{
 
-    @GetMapping(path = "/kids/losepositionkid/{pos}")
-    public ResponseEntity<ResponseDTO> losePositionKid(Kid kid, int pos2) throws ListSEException{
-        listSEService.getKids().losePositionKid(kid, pos2);
-        return new ResponseEntity<>(new ResponseDTO(200, "El niño perdio el numero indicado de posiciones", null), HttpStatus.OK);
-    }
+    listSEService.getKids().losePosition(id,numposition,listSEService.getKids());
+    return new ResponseEntity<>(new ResponseDTO(
+            200,"El niño se ha movido con éxito",
+            null), HttpStatus.OK);
+}
 
 // Este es el controller del noveno metodo
+/*
+   @GetMapping(path = "/rangeage")
+    public ResponseEntity<ResponseDTO> getRangeByAge() throws ListSEException{
 
-    @GetMapping(path = "/reportbyage/{age}")
-    public ResponseEntity<ResponseDTO> getRangeByAge(byte minAge,byte maxAge) throws ListSEException{
-        listSEService.getKids().getRangeByAge(minAge, maxAge);
-        return new ResponseEntity<>(new ResponseDTO(200, "El niño retrocedio las posiciones", null), HttpStatus.OK);
-    }
+        List<RangeDTO> kidsRangeList = new ArrayList<>();
+        for (Ranges i : RangeService.){
+            int quantity = listSEService.getKids().getRangeByAge(i.getFrom(), i.getTo());
+            kidsRangeList.add(new RangeDTO(i,quantity));
+        }
+        return new ResponseEntity<>(new ResponseDTO(
+                200,"el rango de los niños es: "+kidsRangeList,
+                null), HttpStatus.OK);
+                }
+
+ */
 
 // Este es el controller del decimo metodo
 
-    @GetMapping(path = "addtostartnamechar/{letter}")
-    public ResponseEntity<ResponseDTO> addToStartNameChar(char letter) throws ListSEException{
-        listSEService.getKids().addToStartNameChar(letter);
-        return new ResponseEntity<>(new ResponseDTO(200, "El niño avanzó de posiciones", null), HttpStatus.OK);
+    @GetMapping(path = "/sendkidend/{letter}")
+    public ResponseEntity<ResponseDTO> sendKidFinalByLetter(@PathVariable char letter) throws ListSEException{
+        if (listSEService.getKids() != null) {
+            listSEService.getKids().sendKidToTheEndByLetter(letter);
+            return new ResponseEntity<>(new ResponseDTO(200,
+                    "La lista se ha organizado",null), HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(new ResponseDTO(409,
+                    "No existen niños, por lo tanto no se puede realizar la acción",
+                    null), HttpStatus.BAD_REQUEST);
+        }
     }
+
+
+
+
+
     @GetMapping(path = "/change_extremes")
     public ResponseEntity<ResponseDTO> changeExtremes() throws ListSEException{
         listSEService.getKids().changeExtremes();
@@ -129,31 +162,29 @@ public class ListSEController {
                 null), HttpStatus.OK);
     }
 
-    @PostMapping(path="addkid")
-    public ResponseEntity<ResponseDTO> addKid(@RequestBody KidDTO kidDTO) throws ListSEException {
+    @PostMapping
+    public ResponseEntity<ResponseDTO> addKid(@RequestBody KidDTO kidDTO){
         Location location = locationService.getLocationByCode(kidDTO.getCodeLocation());
-        if (location == null) {
+        if(location == null){
             return new ResponseEntity<>(new ResponseDTO(
-                    404, "La ubicación no existe",
+                    404,"La ubicación no existe",
                     null), HttpStatus.OK);
         }
         try {
             listSEService.getKids().add(
-                    new Kid(kidDTO.getName(),
-                            kidDTO.getIdentification(),
-                            kidDTO.getAge(),
+                    new Kid(kidDTO.getIdentification(),
+                            kidDTO.getName(), kidDTO.getAge(),
                             kidDTO.getGender(), location));
         } catch (ListSEException e) {
             return new ResponseEntity<>(new ResponseDTO(
-                    409, e.getMessage(),
+                    409,e.getMessage(),
                     null), HttpStatus.OK);
         }
         return new ResponseEntity<>(new ResponseDTO(
-                200, "Se ha adicionado el petacón",
+                200,"Se ha adicionado el petacón",
                 null), HttpStatus.OK);
 
     }
-
 
 
     @GetMapping(path = "/kidsbydepto")

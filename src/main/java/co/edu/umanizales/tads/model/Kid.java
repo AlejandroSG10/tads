@@ -13,10 +13,4 @@ public class Kid {
     private char gender;
     private Location location;
 
-    public Kid (String identification, String name, int sum){
-    }
-
-    public int getPosition(){
-        return 0;
-    }
 }

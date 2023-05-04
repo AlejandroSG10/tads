@@ -10,16 +10,6 @@ public class ListSE {
     private Node head;
     private int size;
 
-    public int Size() {
-        int size = 0;
-        Node temp = head;
-        while (temp != null){
-            size ++;
-            temp = temp.getNext();
-        }
-        return size;
-    }
-
     /*
     Algoritmo de adicionar al final
     Entrada
@@ -61,6 +51,23 @@ public class ListSE {
         }
         size ++;
     }
+    public void deleteByidentification (String identification){
+        Node currentNode = head;
+        Node prevNode = null;
+
+        while (currentNode != null && currentNode.getData().getIdentification() != identification) {
+            prevNode = currentNode;
+            currentNode = currentNode.getNext();
+        }
+
+        if(currentNode != null){
+            if (prevNode == null){
+                head = currentNode.getNext();
+            }else {
+                prevNode.setNext(currentNode.getNext());
+            }
+        }
+    }
 
     /* Adicionar al inicio
     si hay datos
@@ -82,6 +89,21 @@ public class ListSE {
             head = new Node(kid);
         }
         size++;
+    }
+
+    public void addKidsByPosition(Kid kid, int pos){
+        Node newNode = new Node(kid);
+        if (pos == 0){
+            newNode.setNext(head);
+            head = newNode;
+        } else {
+            Node current = head;
+            for (int i = 1; i < pos - 1; i++){
+                current = current.getNext();
+            }
+            newNode.setNext(current.getNext());
+            current.setNext(newNode);
+        }
     }
 
     // Desde aquí comienzan los 10 codigos, Este es el codigo 1.
@@ -123,79 +145,84 @@ public class ListSE {
     }
 
     // Este es el codigo 3.
-    public void alternateKids() throws ListSEException{
-        Node boys = head;
-        Node girls = head.getNext();
-        Node girlHead = girls;
-        if (head == null || head.getNext() == null){
-            throw new ListSEException("No existen niños o solo hay un niño en la lista");
-        }
-        while (girls != null && boys != null){
-            boys.setNext(girls.getNext());
-            if (girls.getNext() != null) {
-                girls.setNext(girls.getNext().getNext());
+    public void alternateKids() throws ListSEException {
+        ListSE listCp = new ListSE();
+
+        ListSE boysList = new ListSE();
+        ListSE girlsList = new ListSE();
+
+        Node temp = head;
+
+        if (this.head == null && this.head.getNext() == null) {
+            throw new ListSEException("No existen niños o no hay suficientes para alternar");
+        } else {
+            while (temp != null) {
+                if (temp.getData().getGender() == 'M') {
+                    boysList.add(temp.getData());
+                } else {
+                    if (temp.getData().getGender() == 'F') {
+                        girlsList.add(temp.getData());
+                    }
+                }
+                temp = temp.getNext();
             }
-            boys = boys.getNext();
-            girls = girls.getNext();
-        }
-        if (girls == null) {
-            boys.setNext(girlHead);
-        }else {
-            girls.setNext(girlHead);
+
+            Node nodeBoys = boysList.getHead();
+            Node nodeGirls = girlsList.getHead();
+
+            while (nodeBoys != null) {
+                if (nodeBoys != null) {
+                    listCp.add(nodeBoys.getData());
+                    nodeBoys = nodeBoys.getNext();
+                }
+                if (nodeGirls != null) {
+                    listCp.add(nodeGirls.getData());
+                    nodeGirls = nodeGirls.getNext();
+                }
+            }
+            this.head = listCp.getHead();
         }
     }
     // Este es el codigo 4.
-    public void removeKidByAge(byte age) throws ListSEException {
-        if (age <= 0) {
-            throw new ListSEException("La edad debe ser mayor que 0");
+    public void deleteByAge (Byte age) throws ListSEException{
+        Node temp = head;
+        ListSE listcp = new ListSE();
+        if (age <= 0){
+            throw new ListSEException("La edad tiene que ser mayor que 0");
         }
-        Node current = head;
-        Node prev = null;
-        while (current != null) {
-            if (current.getData().getAge() == age) {
-                if (prev == null) {
-                    head = current.getNext();
-                }else {
-                    prev.setNext(current.getNext());
-                }
-            } else {
-                prev = current;
+        if (this.head == null){
+            throw new ListSEException("No hay niños con los que se pueda realizar esta operacion");
+        }
+        while (temp != null){
+            if (temp.getData().getAge() != age){
+                listcp.addToStart(temp.getData());
             }
-            current = current.getNext();
+            temp = temp.getNext();
         }
+        this.head = listcp.getHead();
     }
-
 // Este es el codigo 5.
-
-    public int getLength() {
+public float averageByAge()throws ListSEException{
+    if(head != null){
+        Node temp = head;
         int count = 0;
-        Node current = head;
-        while (current != null) {
+        int age = 0;
+        while (temp.getNext() != null){
             count++;
-            current = current.getNext();
+            age = age + temp.getData().getAge();
+            temp = temp.getNext();
         }
-        return count;
+        return (float) age/count;
+    }else{
+        throw new ListSEException("No hay niños para poder hacer el promedio de edades");
     }
-
-    public double getAverageAge() throws ListSEException {
-        double averageAge = 0;
-        Node temp = this.head;
-        if (this.head != null) {
-            while (temp != null) {
-                averageAge = averageAge + temp.getData().getAge();
-                temp = temp.getNext();
-            }
-            averageAge = averageAge / getLength();
-            return averageAge;
-
-        }else {
-            throw new ListSEException("La lista está vacía");
-        }
-    }
-
+}
 // Este es el codigo 6.
 public int getCountKidsByLocationCode(String code) throws ListSEException{
     int count =0;
+    if (this.head == null){
+        throw new ListSEException("No hay niños para realizar esta operacion");
+    }
     if( this.head!=null){
         Node temp = this.head;
         while(temp != null){
@@ -204,112 +231,88 @@ public int getCountKidsByLocationCode(String code) throws ListSEException{
             }
             temp = temp.getNext();
         }
-    } else{
-        throw new ListSEException("El codigo de la localizacion no puede ser nulo");
     }
     return count;
 }
 
 // Este es el codigo 7.
-public void winPositionKid(String id, int win) throws ListSEException {
-    Node temp = head;
-    int sum;
-    ListSE listSE = new ListSE();
-    if (head != null) {
-        while (temp != null && !temp.getData().getIdentification().equals(id)) {
-            listSE.add(temp.getData());
+public void winPosition(String id, int position, ListSE listSE) throws ListSEException{
+    if (head != null){
+        Node temp = this.head;
+        int counter = 0;
+
+        while (temp != null && ! temp.getData().getIdentification().equals(id)){
             temp = temp.getNext();
+            counter ++;
         }
-        if (temp == null) {
-            throw new ListSEException("No se encontró un niño con el ID " + id);
-        }
-        sum = temp.getData().getPosition() + win;
-        if (sum < 0) {
-            throw new ListSEException("No se puede mover el niño más allá de la primera posición");
-        } else if (sum > Size()) {
-            throw new ListSEException("No se puede mover el niño más allá de la última posición");
-        }
-        listSE.add(new Kid(temp.getData().getIdentification(),
-                temp.getData().getName(), sum));
-        temp = temp.getNext();
-        while (temp != null) {
-            listSE.add(temp.getData());
-            temp = temp.getNext();
-        }
-        head = listSE.getHead();
-    } else {
-        throw new ListSEException("La lista está vacía");
+        int newPosition = counter - position;
+        Kid listCopy = temp.getData();
+        listSE.deleteByidentification(temp.getData().getIdentification());
+        listSE.addKidsByPosition(listCopy , newPosition);
+    }
+    else {
+        throw new ListSEException("La lista esta vacia por lo tanto no se puede completar la accion");
     }
 }
-
 // Este es el codigo 8.
-public void losePositionKid(Kid kid, int pos2) throws ListSEException{
-        Node temp = head;
-        Node newNode = new Node(kid);
-        int listLength = getLength();
-        if (pos2 < 0 || pos2 >= listLength)
-            add(kid);
-        if (pos2 == 0) {
-            newNode.setNext(head);
-            head = newNode;
-        }else {
-            for (int i = 0; temp.getNext() != null && i < pos2 - 1; i++) {
-                temp = temp.getNext();
-            }
-            newNode.setNext(temp.getNext());
-            temp.setNext(newNode);
+public void losePosition(String id, int position, ListSE listSE) throws ListSEException{
+    if (head != null){
+        Node temp = this.head;
+        int counter = 1;
+
+        while (temp != null && ! temp.getData().getIdentification().equals(id)){
+            temp = temp.getNext();
+            counter ++;
         }
+        int newPosition = position+counter;
+        Kid listCopy = temp.getData();
+        listSE.deleteByidentification(temp.getData().getIdentification());
+        listSE.addKidsByPosition(listCopy , newPosition);
+    }
+    else {
+        throw new ListSEException("La lista esta vacia por lo tanto no se puede completar la accion");
+    }
 }
 
 // Este es el 9.
-
-    public void getRangeByAge(byte minAge, byte maxAge) throws ListSEException{
-        Node current = head;
-        boolean found = false;
-        while (current != null){
-            byte edad = current.getData().getAge();
-            if (edad >= minAge && edad <= maxAge){
-                String name = current.getData().getName();
-                found = true;
-            }
-            current = current.getNext();
+public int getRangeByAge(int first, int last) throws ListSEException{
+    Node temp = head;
+    int count = 0;
+    while (temp != null){
+        if (temp.getData().getAge() >= first && temp.getData().getAge() <= last){
+            count ++;
         }
-        if (!found){
-            throw new ListSEException("No se encontraron niños en el rango de edad pedido");
-        }
-
+        temp = temp.getNext();
     }
-
+    return count;
+}
 // Este es el 10.
+    public void sendKidToTheEndByLetter(char letter) throws ListSEException{
+        ListSE listCopy = new ListSE();
+        Node temp = this.head;
 
-    public void addToStartNameChar(char letter) throws ListSEException {
-        if (head == null) {
-            throw new ListSEException("La lista esta vacia");
-        }
-        Node prev = null;
-        Node current = head;
-        Node last = null;
-        while (current != null) {
-            if (current.name.startsWith(String.valueOf(letter))) {
-                if (prev == null) {
-                    head = current.getNext();
-                } else {
-                    prev.setNext(current.getNext());
-                }
-                if (last == null) {
-                    last = current;
-                } else {
-                    last.setNext(current);
-                    last = current;
-                }
-                current = current.getNext();
-                last.setNext(null);
-            } else {
-                prev = current;
-                current = current.getNext();
+        while (temp != null) {
+            if (temp.getData().getName().charAt(0) != Character.toUpperCase(letter)) {
+                listCopy.add(temp.getData());
             }
+            temp = temp.getNext();
         }
+
+        temp = this.head;
+
+        while (temp != null) {
+            if (temp.getData().getName().charAt(0) == Character.toUpperCase(letter)) {
+                listCopy.add(temp.getData());
+            }
+            temp = temp.getNext();
+        }
+        this.head = listCopy.getHead();
     }
+
+
+
+
+
 
 
     public void changeExtremes() throws ListSEException{
