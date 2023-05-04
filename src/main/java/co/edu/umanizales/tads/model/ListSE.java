@@ -202,7 +202,7 @@ public class ListSE {
         this.head = listcp.getHead();
     }
 // Este es el codigo 5.
-public float averageByAge()throws ListSEException{
+public float getAverageByAge()throws ListSEException{
     if(head != null){
         Node temp = head;
         int count = 0;
@@ -309,7 +309,7 @@ public int getRangeByAge(int first, int last) throws ListSEException{
         this.head = listCopy.getHead();
     }
 
-
+// Hasta aqui son los 10 codigos de las listas simplemente enlazadas
 
 
 
