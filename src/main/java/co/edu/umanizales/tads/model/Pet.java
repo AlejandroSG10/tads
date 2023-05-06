@@ -6,9 +6,12 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class Pet {
-    private String name;
-    private byte age;
-    private String identification;
-    private char gender;
+    private String petIdentification;
+    private String namePet;
+    private byte agePet;
+    private String petType;
     private String breed;
+    private Location location;
+    private char petGender;
 }
+
