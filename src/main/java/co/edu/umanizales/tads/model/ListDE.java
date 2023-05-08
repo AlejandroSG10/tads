@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 public class ListDE {
-    private NodeDE head;
+    private NodeDE headDE;
     private NodeDE tail;
     private int size;
 
@@ -17,16 +17,16 @@ public class ListDE {
 
 
     public void addPet(Pet pet) throws ListDEException {
-        if (head != null) {
-            NodeDE temp = head;
+        if (headDE != null) {
+            NodeDE temp = headDE;
             while (temp.getNextDE() != null) {
                 if (temp.getData().getPetIdentification().equals(pet.getPetIdentification())) {
-                    throw new ListDEException("Ya existe el perro");
+                    throw new ListDEException("Ya existe la mascota");
                 }
                 temp = temp.getNextDE();
             }
             if (temp.getData().getPetIdentification().equals(pet.getPetIdentification())) {
-                throw new ListDEException("Ya existe un perro");
+                throw new ListDEException("Ya existe la mascota");
             }
             /// Parado en el último
             NodeDE newNode = new NodeDE(pet);
@@ -34,16 +34,16 @@ public class ListDE {
             newNode.setPrevious(temp);
 
         } else {
-            head = new NodeDE(pet);
+            headDE = new NodeDE(pet);
         }
         size++;
     }
 
-    public List <Pet> print(){
+    public List<Pet> print() {
         pets.clear();
-        if (head != null){
-            NodeDE temp = head;
-            while (temp != null){
+        if (headDE != null) {
+            NodeDE temp = headDE;
+            while (temp != null) {
                 pets.add(temp.getData());
                 temp = temp.getNextDE();
             }
@@ -57,32 +57,33 @@ public class ListDE {
             throw new ListDEException("El objeto pet no puede ser nulo");
         }
 
-        NodeDE newNode = new NodeDE(pet);
-        if (head != null) {
-            head.setPrevious(newNode);
-            newNode.setNextDE(head);
+        NodeDE nodeCP = new NodeDE(pet);
+        if (headDE != null) {
+            headDE.setPrevious(nodeCP);
+            nodeCP.setNextDE(headDE);
         }
-        head = newNode;
+        headDE = nodeCP;
         size++;
     }
-    public void addByPosition(Pet pet, int position) throws ListDEException{
-        if (position < 0 || position > size){
+
+    public void addByPosition(Pet pet, int position) throws ListDEException {
+        if (position < 0 || position > size) {
             throw new ListDEException("Posicion invalida:" + position);
         }
         NodeDE newNode = new NodeDE(pet);
-        if (position == 0){
-            newNode.setNextDE(head);
-            if (head != null){
-                head.setPrevious(newNode);
+        if (position == 0) {
+            newNode.setNextDE(headDE);
+            if (headDE != null) {
+                headDE.setPrevious(newNode);
             }
-            head = newNode;
-        }else {
-            NodeDE current = head;
-            for (int i = 1; i < position -1; i++){
+            headDE = newNode;
+        } else {
+            NodeDE current = headDE;
+            for (int i = 1; i < position - 1; i++) {
                 current = current.getNextDE();
             }
             newNode.setNextDE(current.getNextDE());
-            if (current.getNextDE() != null){
+            if (current.getNextDE() != null) {
                 current.getNextDE().setPrevious(newNode);
             }
             current.setNextDE(newNode);
@@ -96,13 +97,13 @@ public class ListDE {
             throw new IllegalArgumentException("El identificador del dueño no puede ser nulo");
         }
 
-        NodeDE temp = head;
+        NodeDE temp = headDE;
         while (temp != null) {
             if (temp.getData().getPetIdentification().equals(id)) {
                 NodeDE prev = temp.getPrevious();
                 NodeDE next = temp.getNextDE();
                 if (prev == null) {
-                    head = next;
+                    headDE = next;
                 } else {
                     prev.setNextDE(next);
                 }
@@ -115,34 +116,32 @@ public class ListDE {
     }
 
 
-
 // Aqui comienzan los 10 metodos, este es el 1.
 
     public void invertPets() throws ListDEException {
-        if (this.head == null) {
+        if (this.headDE == null) {
             throw new ListDEException("No se puede invertir la lista porque esta vacia");
         }
 
         ListDE listcopy = new ListDE();
-        NodeDE temp = this.head;
+        NodeDE temp = this.headDE;
         while (temp != null) {
             listcopy.addToStartPet(temp.getData());
             temp = temp.getNextDE();
         }
-        this.head = listcopy.getHead();
+        this.headDE = listcopy.getHeadDE();
     }
-
 
 
 // Este es el 2.
 
     public void orderPetsMasculineToStart() throws ListDEException {
-        if (head == null) {
+        if (headDE == null) {
             throw new ListDEException(
                     "La lista está vacía y no se pueden agregar elementos");
         }
         ListDE listCopy = new ListDE();
-        NodeDE temp = head;
+        NodeDE temp = headDE;
         while (temp != null) {
             if (temp.getData().getPetGender() == 'M') {
                 listCopy.addToStartPet(temp.getData());
@@ -151,23 +150,23 @@ public class ListDE {
             }
             temp = temp.getNextDE();
         }
-        head = listCopy.getHead();
+        headDE = listCopy.getHeadDE();
     }
 
     // Este es el codigo 3.
     public void alternatePets() throws ListDEException {
-        if (head == null) {
+        if (headDE == null) {
             throw new ListDEException("La lista está vacía y no se puede realizar el sorteo");
         }
 
         ListDE listM = new ListDE();
         ListDE listF = new ListDE();
-        NodeDE temp = this.head;
-        while (temp != null){
-            if(temp.getData().getPetGender()=='M'){
+        NodeDE temp = this.headDE;
+        while (temp != null) {
+            if (temp.getData().getPetGender() == 'M') {
                 listM.addPet(temp.getData());
             }
-            if(temp.getData().getPetGender()=='F'){
+            if (temp.getData().getPetGender() == 'F') {
                 listF.addPet(temp.getData());
             }
             temp = temp.getNextDE();
@@ -179,49 +178,49 @@ public class ListDE {
         }
 
         ListDE ListCP = new ListDE();
-        NodeDE Nodem = listM.getHead();
-        NodeDE Nodef = listF.getHead();
-        while (Nodem != null || Nodef != null){
-            if (Nodem != null){
+        NodeDE Nodem = listM.getHeadDE();
+        NodeDE Nodef = listF.getHeadDE();
+        while (Nodem != null || Nodef != null) {
+            if (Nodem != null) {
                 ListCP.addPet(Nodem.getData());
                 Nodem = Nodem.getNextDE();
             }
-            if (Nodef != null){
+            if (Nodef != null) {
                 ListCP.addPet(Nodef.getData());
                 Nodef = Nodef.getNextDE();
             }
         }
-        this.head = ListCP.getHead();
+        this.headDE = ListCP.getHeadDE();
     }
-// Este es el codigo 4.
-public void deletePetByAge(Byte age) throws ListDEException {
-    if (age == null) {
-        throw new ListDEException("La edad de la mascota no puede ser nula");
-    }
-    NodeDE temp = head;
-    while (temp != null) {
-        if (temp.getData().getAgePet() == age) {
-            NodeDE prev = temp.getPrevious();
-            NodeDE next = temp.getNextDE();
-            if (prev == null) {
-                head = next;
-            } else {
-                prev.setNextDE(next);
-            }
-            if (next != null) {
-                next.setPrevious(prev);
-            }
-        }
-        temp = temp.getNextDE();
-    }
-}
 
+    // Este es el codigo 4.
+    public void deletePetByAge(Byte age) throws ListDEException {
+        if (age == null) {
+            throw new ListDEException("La edad de la mascota no puede ser nula");
+        }
+        NodeDE temp = headDE;
+        while (temp != null) {
+            if (temp.getData().getAgePet() == age) {
+                NodeDE prev = temp.getPrevious();
+                NodeDE next = temp.getNextDE();
+                if (prev == null) {
+                    headDE = next;
+                } else {
+                    prev.setNextDE(next);
+                }
+                if (next != null) {
+                    next.setPrevious(prev);
+                }
+            }
+            temp = temp.getNextDE();
+        }
+    }
 
 
     // Este es el codigo 5.
     public float averageAgePet() throws ListDEException {
-        if (head != null) {
-            NodeDE temp = head;
+        if (headDE != null) {
+            NodeDE temp = headDE;
             int counter = 0;
             int ages = 0;
             while (temp.getNextDE() != null) {
@@ -240,12 +239,12 @@ public void deletePetByAge(Byte age) throws ListDEException {
 
     // Este es el codigo 6.
     public int getCountPetsByLocationCode(String code) throws ListDEException {
-        if(code == null || code.isEmpty()) {
+        if (code == null || code.isEmpty()) {
             throw new ListDEException("El codigo de la ciudad no puede estar vacio");
         }
         int count = 0;
-        if (this.head != null) {
-            NodeDE temp = this.head;
+        if (this.headDE != null) {
+            NodeDE temp = this.headDE;
             while (temp != null) {
                 if (temp.getData().getLocation().getCode().equals(code)) {
                     count++;
@@ -262,14 +261,14 @@ public void deletePetByAge(Byte age) throws ListDEException {
         if (position < 0) {
             throw new ListDEException("La posición debe ser un número positivo");
         }
-        if (head != null){
-            NodeDE temp = head;
+        if (headDE != null) {
+            NodeDE temp = headDE;
             int counter = 1;
-            while (temp != null && !temp.getData().getPetIdentification().equals(id)){
+            while (temp != null && !temp.getData().getPetIdentification().equals(id)) {
                 temp = temp.getNextDE();
                 counter++;
             }
-            if (temp != null){
+            if (temp != null) {
                 int newPosition = counter - position;
                 if (newPosition < 0) {
                     throw new ListDEException(
@@ -277,8 +276,8 @@ public void deletePetByAge(Byte age) throws ListDEException {
                 }
                 Pet listCopy = temp.getData();
                 deleteById(temp.getData().getPetIdentification());
-                if (newPosition > 0 ){
-                    addByPosition(listCopy,newPosition);
+                if (newPosition > 0) {
+                    addByPosition(listCopy, newPosition);
                 } else {
                     addToStartPet(listCopy);
                 }
@@ -288,12 +287,12 @@ public void deletePetByAge(Byte age) throws ListDEException {
 
     // Este es el codigo 8.
 
-    public void losePetPosition(String id, int position) throws ListDEException{
+    public void losePetPosition(String id, int position) throws ListDEException {
 
         if (position < 0) {
             throw new ListDEException("La posicion debe ser positiva");
         }
-        NodeDE temp = head;
+        NodeDE temp = headDE;
         int count = 1;
         while (temp != null && !temp.getData().getPetIdentification().equals(id)) {
             temp = temp.getNextDE();
@@ -312,11 +311,11 @@ public void deletePetByAge(Byte age) throws ListDEException {
         if (Start < 0 || finish < 0) {
             throw new ListDEException("El informe de rangos no puede ser negativo");
         }
-        NodeDE temp = head;
+        NodeDE temp = headDE;
         int counter = 0;
-        while (temp != null){
-            if (temp.getData().getAgePet() >= Start && temp.getData().getAgePet() <= finish){
-                counter ++;
+        while (temp != null) {
+            if (temp.getData().getAgePet() >= Start && temp.getData().getAgePet() <= finish) {
+                counter++;
             }
             temp = temp.getNextDE();
         }
@@ -325,10 +324,10 @@ public void deletePetByAge(Byte age) throws ListDEException {
 
     // Este es el codigo 10.
 
-    public void sendPetToTheEndByLetter(char letter) throws ListDEException  {
-        if (this.head != null) {
+    public void sendPetToTheEndByLetter(char letter) throws ListDEException {
+        if (this.headDE != null) {
             ListDE listCopy = new ListDE();
-            NodeDE temp = this.head;
+            NodeDE temp = this.headDE;
             char firstChar = Character.toUpperCase(letter);
 
             while (temp != null) {
@@ -340,19 +339,20 @@ public void deletePetByAge(Byte age) throws ListDEException {
                 }
                 temp = temp.getNextDE();
             }
-            this.head = listCopy.getHead();
-        }else {
+            this.headDE = listCopy.getHeadDE();
+        } else {
             throw new ListDEException("La lista no puede estar vacia");
         }
     }
+
     // Hasta aqui van los metodos
     public boolean checkPet(Pet pet) throws ListDEException {
         if (pet == null) {
             throw new ListDEException("La lista de los perros no puede estar vacia");
         }
 
-        if (this.head != null) {
-            NodeDE temp = this.head;
+        if (this.headDE != null) {
+            NodeDE temp = this.headDE;
             while (temp != null) {
 
                 temp = temp.getNextDE();
@@ -362,21 +362,74 @@ public void deletePetByAge(Byte age) throws ListDEException {
         return true;
     }
 
-    public int getCountPetsByDeptoCode(String code){
+    public int getCountPetsByDeptoCode(String code) {
         if (code == null || code.length() != 5) {
             throw new IllegalArgumentException("El código de departamento debe tener 5 caracteres.");
         }
         int count = 0;
-        if (this.head != null){
-            NodeDE temp = this.head;
-            while (temp != null){
+        if (this.headDE != null) {
+            NodeDE temp = this.headDE;
+            while (temp != null) {
                 String locCode = temp.getData().getLocation().getCode();
-                if (locCode != null && locCode.length() >= 5 && locCode.substring(0, 5).equals(code)){
+                if (locCode != null && locCode.length() >= 5 && locCode.substring(0, 5).equals(code)) {
                     count++;
                 }
                 temp = temp.getNextDE();
             }
         }
         return count;
+    }
+
+
+    /*
+    Eliminar mascotas soltandose
+si la cabeza es nula hago que no retorne nada
+
+si la identificacion es igual a la que nos mandan la cabeza seria igual al siguiente
+
+si la cabeza es diferente de nula
+    la cabeza seria igual a nulo
+
+si no es igual a la identificacion el temporal se pasa al siguiente
+
+me paro en el nodo de la mascota que quiero eliminar y pregunto
+
+si es igual a nulo
+    creo 2 variables que llamo anterior que sea igual al previo
+
+    y el nodo temporal seria igual a el siguiente
+
+
+si el siguiente es diferente de nulo creo 2 variables que se llamarian anterior y despues
+    que sean iguales al previo y al siguiente
+
+si se cumple la condicion lo que haria seria que el nodo siguiente que se llama despues lo pondria en el anterior
+y el nodo anterior lo pondria en despues
+     */
+    public void eliminateByIdentification(String identification) {
+        NodeDE temp = headDE;
+        if (this.headDE == null){
+            return;
+        }
+        if (temp.getData().getPetIdentification().equals(identification)) {
+            headDE = temp.getNextDE();
+            if (headDE != null){
+                headDE.setPrevious(null);
+            }
+        }
+        if (!temp.getData().getPetIdentification().equals(identification)){
+            temp = temp.getNextDE();
+        }
+        temp = temp.getNextDE();
+        if (temp.getNextDE()==null){
+            NodeDE anterior = temp.getPrevious();
+            anterior.setNextDE(null);
+        }
+        if (temp.getNextDE()!=null){
+            NodeDE despues = temp.getNextDE();
+            NodeDE anterior = temp.getPrevious();
+            anterior.setNextDE(despues);
+            despues.setPrevious(anterior);
+        }
     }
 }

@@ -11,7 +11,8 @@ public class Pet {
     private byte agePet;
     private String petType;
     private String breed;
-    private Location location;
     private char petGender;
+    private Location location;
+
 }
 

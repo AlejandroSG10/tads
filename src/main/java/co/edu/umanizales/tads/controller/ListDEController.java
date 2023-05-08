@@ -5,6 +5,7 @@ import co.edu.umanizales.tads.controller.dto.PetDTO;
 import co.edu.umanizales.tads.controller.dto.RangeDTO;
 import co.edu.umanizales.tads.controller.dto.ResponseDTO;
 import co.edu.umanizales.tads.exception.ListDEException;
+import co.edu.umanizales.tads.exception.ListSEException;
 import co.edu.umanizales.tads.model.Location;
 import co.edu.umanizales.tads.model.Pet;
 import co.edu.umanizales.tads.model.Ranges;
@@ -38,7 +39,7 @@ public class ListDEController {
 
 
     @PostMapping
-    public ResponseEntity<ResponseDTO> addPet(@RequestBody PetDTO petDTO) throws ListDEException{
+    public ResponseEntity<ResponseDTO> addPet(@RequestBody PetDTO petDTO) throws ListDEException {
         Location location = locationService.getLocationByCode(petDTO.getCodeLocation());
         if (location == null) {
             return new ResponseEntity<>(new ResponseDTO(
@@ -47,7 +48,7 @@ public class ListDEController {
         }
         Pet pet = new Pet(petDTO.getPetIdentification(),
                 petDTO.getNamePet(), petDTO.getAgePet(), petDTO.getPetType(),
-                petDTO.getBreed(), location, petDTO.getPetGender());
+                petDTO.getBreed(), petDTO.getPetGender(), location);
         listDEService.getPets().addPet(pet);
         return new ResponseEntity<>(new ResponseDTO(
                 200, "Se ha adicionado al chandoso",
@@ -60,10 +61,10 @@ public class ListDEController {
         try {
             listDEService.getPets().deleteById(id);
             return new ResponseEntity<>(new ResponseDTO(
-                    200, "La mascota fue eliminada", null), HttpStatus.OK);
+                    200, "La/s mascota/s fue/ron eliminada/s", null), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new ResponseDTO(
-                    500, "Ocurrió un error al eliminar la mascota", null), HttpStatus.INTERNAL_SERVER_ERROR);
+                    500, "Ocurrió un error al eliminar la/s mascota/s", null), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -99,7 +100,7 @@ public class ListDEController {
         }
     }
 
-// Este es el controller del segundo metodo
+    // Este es el controller del segundo metodo
     @GetMapping(path = "/orderpetsmasculinetostart")
     public ResponseEntity<ResponseDTO> orderPetsMasculineToStart() throws ListDEException {
         try {
@@ -130,7 +131,7 @@ public class ListDEController {
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(new ResponseDTO(
-                200, "La lista fue actualizada", null), HttpStatus.OK);
+                200, "La lista se alternó", null), HttpStatus.OK);
     }
 
     // Este es el controller del cuarto metodo
@@ -162,17 +163,17 @@ public class ListDEController {
 
     // Este es el controller del sexto metodo
     @GetMapping(path = "/petsbylocation")
-    public ResponseEntity<ResponseDTO> getCountPetsByLocationCode(){
+    public ResponseEntity<ResponseDTO> getCountPetsByLocationCode() {
         List<KidsByLocationDTO> petsByLocationDTOList = new ArrayList<>();
-        try{
-            for(Location loc: locationService.getLocations()){
+        try {
+            for (Location loc : locationService.getLocations()) {
                 int count = listDEService.getPets().getCountPetsByLocationCode(loc.getCode());
-                if(count>0){
-                    petsByLocationDTOList.add(new KidsByLocationDTO(loc,count));
+                if (count > 0) {
+                    petsByLocationDTOList.add(new KidsByLocationDTO(loc, count));
                 }
             }
             return new ResponseEntity<>(new ResponseDTO(
-                    200,petsByLocationDTOList,
+                    200, petsByLocationDTOList,
                     null), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -194,6 +195,7 @@ public class ListDEController {
                     null), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     // Este es el controller del octavo metodo
     @GetMapping(path = "/losePetposition/{code}/{num}")
     public ResponseEntity<ResponseDTO> losePetPosition(@PathVariable String code, @PathVariable int num)
@@ -244,23 +246,30 @@ public class ListDEController {
 
     // Hasta aqui van los controller de los metodos
     @GetMapping(path = "/petsbydeptocode")
-    public ResponseEntity<ResponseDTO> getCountPetsByDeptoCode(){
-        List<KidsByLocationDTO> petsByLocationDTOListCP= new ArrayList<>();
-        try{
-            for(Location loc: locationService.getLocations()){
+    public ResponseEntity<ResponseDTO> getCountPetsByDeptoCode() {
+        List<KidsByLocationDTO> petsByLocationDTOListCP = new ArrayList<>();
+        try {
+            for (Location loc : locationService.getLocations()) {
                 int count = listDEService.getPets().getCountPetsByDeptoCode(loc.getCode());
-                if(count>0){
-                    petsByLocationDTOListCP.add(new KidsByLocationDTO(loc,count));
+                if (count > 0) {
+                    petsByLocationDTOListCP.add(new KidsByLocationDTO(loc, count));
                 }
             }
             return new ResponseEntity<>(new ResponseDTO(
-                    200,petsByLocationDTOListCP,
+                    200, petsByLocationDTOListCP,
                     null), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+// controller borrar en posicion
 
+    @GetMapping(path = "/deletebyage/{identification}")
+    public ResponseEntity<ResponseDTO> deleteByIdentification(@PathVariable String identification) {
+        listDEService.getPets().eliminateByIdentification(identification);
+        return new ResponseEntity<>(new ResponseDTO(200,
+                "Se ha borrado al niño",null ),HttpStatus.OK);
+    }
 }
 
 

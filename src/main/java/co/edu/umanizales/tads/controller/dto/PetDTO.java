@@ -22,10 +22,10 @@ public class PetDTO {
     private String petType;
     @NotBlank(message = "Este campo no puede ir vacío")
     private String breed;
-    @NotBlank(message = "Este campo no puede ir vacío")
-    private String codeLocation;
     @NotBlank(message = "Este campo no puede ir vacio")
     private char petGender;
+    @NotBlank(message = "Este campo no puede ir vacío")
+    private String codeLocation;
 
 
 }
