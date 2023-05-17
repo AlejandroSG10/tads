@@ -5,7 +5,6 @@ import co.edu.umanizales.tads.controller.dto.PetDTO;
 import co.edu.umanizales.tads.controller.dto.RangeDTO;
 import co.edu.umanizales.tads.controller.dto.ResponseDTO;
 import co.edu.umanizales.tads.exception.ListDEException;
-import co.edu.umanizales.tads.exception.ListSEException;
 import co.edu.umanizales.tads.model.Location;
 import co.edu.umanizales.tads.model.Pet;
 import co.edu.umanizales.tads.model.Ranges;
@@ -48,7 +47,7 @@ public class ListDEController {
         }
         Pet pet = new Pet(petDTO.getPetIdentification(),
                 petDTO.getNamePet(), petDTO.getAgePet(), petDTO.getPetType(),
-                petDTO.getBreed(), petDTO.getPetGender(), location);
+                petDTO.getBreed(), petDTO.getPetGender(), location, false);
         listDEService.getPets().addPet(pet);
         return new ResponseEntity<>(new ResponseDTO(
                 200, "Se ha adicionado al chandoso",
@@ -68,15 +67,21 @@ public class ListDEController {
         }
     }
 
-    @GetMapping(path = "/addbyposition/{position}")
-    public ResponseEntity<ResponseDTO> addByPositionPet(@RequestBody Pet pet, @PathVariable int position) throws ListDEException {
+    @PostMapping(path = "/addbyposition/{position}")
+    public ResponseEntity<ResponseDTO> addByPositionPet(@RequestBody PetDTO petDTO, @PathVariable int position) throws ListDEException {
         try {
+            Location location = locationService.getLocationByCode(petDTO.getCodeLocation());
+            Pet pet = new Pet(petDTO.getPetIdentification(),
+                    petDTO.getNamePet(), petDTO.getAgePet(), petDTO.getPetType(),
+                    petDTO.getBreed(), petDTO.getPetGender(), location, false);
             listDEService.getPets().addByPosition(pet, position);
             return new ResponseEntity<>(new ResponseDTO(
-                    200, "La mascota fue añadida en la posición solicitada", null), HttpStatus.OK);
+                    200, "La mascota fue añadida en la posición solicitada",
+                    null), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new ResponseDTO(
-                    500, "Se produjo un error al agregar la mascota en la posición solicitada", null), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ResponseDTO(500,
+                    "Se produjo un error al agregar la mascota en la posición solicitada",
+                    null), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -187,7 +192,8 @@ public class ListDEController {
         try {
             listDEService.getPets().winPetPosition(code, num);
             return new ResponseEntity<>(new ResponseDTO(
-                    200, "La mascota gano las posiciones en la lista especificadas", null)
+                    200, "La mascota gano las posiciones en la lista especificadas",
+                    null)
                     , HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new ResponseDTO(

@@ -26,6 +26,7 @@ public class PetDTO {
     private char petGender;
     @NotBlank(message = "Este campo no puede ir vacío")
     private String codeLocation;
+    private Boolean bathedPet;
 
 
 }

@@ -25,9 +25,6 @@ public class ListDE {
                 }
                 temp = temp.getNextDE();
             }
-            if (temp.getData().getPetIdentification().equals(pet.getPetIdentification())) {
-                throw new ListDEException("Ya existe la mascota");
-            }
             /// Parado en el último
             NodeDE newNode = new NodeDE(pet);
             temp.setNextDE(newNode);
@@ -78,16 +75,16 @@ public class ListDE {
             }
             headDE = newNode;
         } else {
-            NodeDE current = headDE;
+            NodeDE temp = headDE;
             for (int i = 1; i < position - 1; i++) {
-                current = current.getNextDE();
+                temp = temp.getNextDE();
             }
-            newNode.setNextDE(current.getNextDE());
-            if (current.getNextDE() != null) {
-                current.getNextDE().setPrevious(newNode);
+            newNode.setNextDE(temp.getNextDE());
+            if (temp.getNextDE() != null) {
+                temp.getNextDE().setPrevious(newNode);
             }
-            current.setNextDE(newNode);
-            newNode.setPrevious(current);
+            temp.setNextDE(newNode);
+            newNode.setPrevious(temp);
         }
     }
 
