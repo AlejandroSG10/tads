@@ -228,7 +228,7 @@ public class ListDEController {
                 listPetRange.add(new RangeDTO(i, quantity));
             }
             return new ResponseEntity<>(new ResponseDTO(
-                    200, "el rango de los niños es: " + listPetRange,
+                    200,  listPetRange,
                     null), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new ResponseDTO(

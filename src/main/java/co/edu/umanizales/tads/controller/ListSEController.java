@@ -211,7 +211,7 @@ public class ListSEController {
                     int quantity = listSEService.getKids().getRangeByAge(i.getFrom(), i.getTo());
                     kidsRangeList.add(new RangeDTO(i, quantity));
                 }
-                return new ResponseEntity<>(new ResponseDTO(200, "el rango de los niños es: " + kidsRangeList, null), HttpStatus.OK);
+                return new ResponseEntity<>(new ResponseDTO(200, kidsRangeList, null), HttpStatus.OK);
 
             } else {
                 return new ResponseEntity<>(new ResponseDTO(409, "No se puede realizar la acción", null), HttpStatus.BAD_REQUEST);

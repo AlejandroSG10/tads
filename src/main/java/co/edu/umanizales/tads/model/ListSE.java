@@ -147,10 +147,15 @@ public class ListSE {
 
     // Este es el codigo 3.
     public void alternateKids() throws ListSEException {
-        ListSE listCp = new ListSE();
+        ListSE listCP = new ListSE();
 
-        ListSE boysList = new ListSE();
-        ListSE girlsList = new ListSE();
+        ListSE listBoys = new ListSE();
+        ListSE listGirls = new ListSE();
+
+        int countBoys = 0;
+        int countGirls = 0;
+
+        int totalKids;
 
         Node temp = head;
 
@@ -159,31 +164,38 @@ public class ListSE {
         } else {
             while (temp != null) {
                 if (temp.getData().getGender() == 'M') {
-                    boysList.add(temp.getData());
+                    listBoys.add(temp.getData());
+                    countBoys++;
                 } else {
                     if (temp.getData().getGender() == 'F') {
-                        girlsList.add(temp.getData());
+                        listGirls.add(temp.getData());
+                        countGirls++;
                     }
                 }
                 temp = temp.getNext();
             }
 
-            Node nodeBoys = boysList.getHead();
-            Node nodeGirls = girlsList.getHead();
+            totalKids = countGirls + countBoys;
+            Node boysNode = listBoys.getHead();
+            Node girlsNode = listGirls.getHead();
 
-            while (nodeBoys != null) {
-                if (nodeBoys != null) {
-                    listCp.add(nodeBoys.getData());
-                    nodeBoys = nodeBoys.getNext();
+            while (totalKids!=0){
+                if (boysNode != null) {
+                    listCP.add(boysNode.getData());
+                    boysNode = boysNode.getNext();
+                    countBoys--;
                 }
-                if (nodeGirls != null) {
-                    listCp.add(nodeGirls.getData());
-                    nodeGirls = nodeGirls.getNext();
+                if (girlsNode != null) {
+                    listCP.add(girlsNode.getData());
+                    girlsNode = girlsNode.getNext();
+                    countGirls--;
                 }
+                totalKids = countGirls + countBoys;
             }
-            this.head = listCp.getHead();
+            this.head = listCP.getHead();
         }
     }
+
     // Este es el codigo 4.
     public void deleteByAge (Byte age) throws ListSEException{
         Node temp = head;
