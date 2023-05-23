@@ -325,7 +325,24 @@ public int getRangeByAge(int first, int last) throws ListSEException{
 // Hasta aqui son los 10 codigos de las listas simplemente enlazadas
 
 
-
+public void addByPosition (Kid kid, int position) throws ListSEException{
+        Node temp = head;
+        Node newNode = new Node(kid);
+        if (head != null){
+            if (position > size){
+                add(kid);
+            } else if (position == 1){
+                addToStart(kid);
+            }else {
+                for (int i = 0; i < position; i++){
+                    temp = temp.getNext();
+                }
+                newNode.setNext(temp.getNext());
+                temp.setNext(newNode);
+            }
+            size++;
+        }
+}
 
 
     public void changeExtremes() throws ListSEException{

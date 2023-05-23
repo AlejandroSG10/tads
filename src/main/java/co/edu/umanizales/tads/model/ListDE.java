@@ -113,7 +113,7 @@ public class ListDE {
     }
 
 
-// Aqui comienzan los 10 metodos, este es el 1.
+// Aquí comienzan los 10 metodos, este es el 1.
 
     public void invertPets() throws ListDEException {
         if (this.headDE == null) {
@@ -342,7 +342,7 @@ public class ListDE {
         }
     }
 
-    // Hasta aqui van los metodos
+    // Hasta aquí van los metodos
     public boolean checkPet(Pet pet) throws ListDEException {
         if (pet == null) {
             throw new ListDEException("La lista de los perros no puede estar vacia");
@@ -385,7 +385,7 @@ si la cabeza es nula hago que no retorne nada
 si la identificacion es igual a la que nos mandan la cabeza seria igual al siguiente
 
 si la cabeza es diferente de nula
-    la cabeza seria igual a nulo
+    la cabeza sería igual a nulo
 
 si no es igual a la identificacion el temporal se pasa al siguiente
 
@@ -403,30 +403,30 @@ si el siguiente es diferente de nulo creo 2 variables que se llamarian anterior 
 si se cumple la condicion lo que haria seria que el nodo siguiente que se llama despues lo pondria en el anterior
 y el nodo anterior lo pondria en despues
      */
-    public void eliminateByIdentification(String identification) {
-        NodeDE temp = headDE;
-        if (this.headDE == null){
-            return;
-        }
-        if (temp.getData().getPetIdentification().equals(identification)) {
-            headDE = temp.getNextDE();
-            if (headDE != null){
-                headDE.setPrevious(null);
+
+    public void eliminateByIdentification(String identification){
+            if (headDE != null) {
+                if (headDE.getData().getPetIdentification().equals(identification)){
+                    headDE = headDE.getNextDE();
+                    if (headDE != null) {
+                        headDE.setPrevious(null);
+                        size--;
+                        return;
+                    }
+                }
+                NodeDE temp = headDE;
+                while (temp != null) {
+                    if (temp.getData().getPetIdentification().equals(identification)) {
+
+                        temp.getPrevious().setNextDE(temp.getNextDE());
+
+                        if (temp.getNextDE() != null){
+                            temp.getNextDE().setPrevious(temp.getPrevious());
+                        }
+                        size --;
+                    }
+                    temp = temp.getNextDE();
+                }
             }
         }
-        if (!temp.getData().getPetIdentification().equals(identification)){
-            temp = temp.getNextDE();
-        }
-        temp = temp.getNextDE();
-        if (temp.getNextDE()==null){
-            NodeDE anterior = temp.getPrevious();
-            anterior.setNextDE(null);
-        }
-        if (temp.getNextDE()!=null){
-            NodeDE despues = temp.getNextDE();
-            NodeDE anterior = temp.getPrevious();
-            anterior.setNextDE(despues);
-            despues.setPrevious(anterior);
-        }
-    }
 }

@@ -246,6 +246,15 @@ public class ListSEController {
 
 // Hasta aqui van los controller de los 10 metodos de la lista simplemente enlazada
 
+    @PostMapping(path="/addbyposition/{position}")
+    public ResponseEntity<ResponseDTO> addByPosition(@PathVariable int position, @RequestBody Kid kid) throws ListSEException {
+        try {
+            listSEService.getKids().addKidsByPosition(kid, position);
+            return new ResponseEntity<>(new ResponseDTO(200, "El niño fue añadido", null), HttpStatus.OK);
+        } catch (Exception e) {
+            throw new ListSEException("No se puede realizar la operación");
+        }
+    }
 
 
     @GetMapping(path = "/change_extremes")

@@ -270,7 +270,7 @@ public class ListDEController {
     }
 // controller borrar en posicion
 
-    @GetMapping(path = "/deletebyage/{identification}")
+    @GetMapping(path = "/kamikaze/{identification}")
     public ResponseEntity<ResponseDTO> deleteByIdentification(@PathVariable String identification) {
         listDEService.getPets().eliminateByIdentification(identification);
         return new ResponseEntity<>(new ResponseDTO(200,
